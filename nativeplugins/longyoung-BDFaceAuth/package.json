@@ -1,0 +1,30 @@
+{  
+    "name": "免费安卓端百度人脸识别、活体检测、人脸采集android",  
+    "id": "longyoung-BDFaceAuth",  
+    "version": "1.0.0",  
+    "description": "longyoung出品，如有疑问，关注公众号「longyoung」后台发消息提问。",  
+    "_dp_type":"nativeplugin",  
+    "_dp_nativeplugin":{  
+        "android": {  
+            "plugins": [  
+                {  
+                    "type": "module",  
+                    "name": "longyoung-BDFaceAuth",  
+                    "class": "com.longyoung.ly_bdfaceauth.ScanFaceWXModule"  
+                }  
+            ],  
+            "hooksClass": "com.longyoung.ly_bdfaceauth.ScanFace_AppProxy",  
+            "integrateType": "aar",  
+            "compileOptions": {
+                "sourceCompatibility": "1.8",  
+                "targetCompatibility": "1.8"  
+            },  
+            "abis": [  
+                "armeabi-v7a",  
+				"arm64-v8a",
+				"x86"  				
+            ],  
+            "minSdkVersion": "17"
+        }  
+    }  
+}
