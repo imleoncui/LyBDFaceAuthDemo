@@ -20,7 +20,9 @@
 				console.error("tagg.onScanFace");
 				lyBDFaceAuth.scanFace({
 					licenseID:"longyoung-face-android",
-					actionAry:["Eye", "Mouth", "HeadLeft", "HeadRight", "HeadLeftOrRight", "HeadUp", "HeadDown"]
+					actionAry:["Eye", "Mouth", "HeadLeft", "HeadRight", "HeadLeftOrRight", "HeadUp", "HeadDown"],//不传无动作
+					isLivenessRandom:0,//不传默认有序，0有序，1随机
+					isSound:0,//不传默认有声音，0无声，1有声
 				}, result => {
 					console.log('file://' + result.imgPath);
 				});

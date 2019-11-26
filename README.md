@@ -17,7 +17,7 @@ uniapp安卓端百度人脸识别、活体检测、人脸采集demo
 
 3.manifest.json文件，选中「App原生插件配置」，选中本地插件，选择使用插件longyoung-BDFaceAuth。
 
-4.调用插件，需要传入licenseID，动作控制参数actionAry（不传默认眨眼睛），代码如下：
+4.调用插件，需要传入licenseID，动作控制参数actionAry（不传只采集脸，没有动作），动作是否随机参数isLivenessRandom，是否有声音参数isSound，代码如下：
 
 ```
 <script>
@@ -30,9 +30,12 @@ uniapp安卓端百度人脸识别、活体检测、人脸采集demo
 		},
 		methods: {
 			onScanFace() {
+				console.error("tagg.onScanFace");
 				lyBDFaceAuth.scanFace({
 					licenseID:"longyoung-face-android",
-					actionAry:["Eye", "Mouth", "HeadLeft", "HeadRight", "HeadLeftOrRight", "HeadUp", "HeadDown"]
+					actionAry:["Eye", "Mouth", "HeadLeft", "HeadRight", "HeadLeftOrRight", "HeadUp", "HeadDown"],//不传无动作
+					isLivenessRandom:0,//不传默认有序，0有序，1随机
+					isSound:0,//不传默认有声音，0无声，1有声
 				}, result => {
 					console.log('file://' + result.imgPath);
 				});
