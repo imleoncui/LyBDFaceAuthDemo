@@ -14,7 +14,7 @@ uniapp 安卓端百度人脸识别、活体检测、人脸采集 demo。
 
 此处需要准备 2 样东西，一是 licenseID，二是 License 授权文件（文件名 idl-license.face-android）。如果已经准备好百度资料，可直接拉到下面看第四点接入步骤。百度详细步骤请查看[百度官方文档](https://ai.baidu.com/docs#/FaceSDK-Collect-WithLiveness-Android/top)，页面拉到2.2准备工作有详细申请说明。`注意事项请看下面的特别说明`。
 
-![](https://user-gold-cdn.xitu.io/2019/12/2/16ec6b223e010d3d?w=674&h=173&f=png&s=19634)
+![uni1.png](https://i.loli.net/2019/12/03/RDsyHQmzTXnACra.png)
 
 ##### 特别说明：
 
@@ -22,12 +22,12 @@ uniapp 安卓端百度人脸识别、活体检测、人脸采集 demo。
 
 3.2 申请通过后，需要新建授权，授权标识只需填入你的标识，如我填入的是 longyoung，百度会自动加后缀，生成licenseID：longyoung-face-android。`记住这个，下面示例代码的第一个参数就是传这个字符串`。
 
-![](https://user-gold-cdn.xitu.io/2019/12/2/16ec6a255df13d14?w=527&h=557&f=png&s=49704)
+![uni2.png](https://i.loli.net/2019/12/03/PuSQ3fZy9pY2dRq.png)
 
 3.3 下图的编号 ③ 就是 licenseID，点击编号 ④ 下载授权文件，放到 nativeplugins/longyoung-BDFaceAuth/android/assets/idl-license.face-android。没路径的请自行创建，nativeplugins 文件夹在项目根目录下，下面接入步骤 4.2 有提到这点。
 
 
-![](https://user-gold-cdn.xitu.io/2019/12/3/16ec94453bedfd08?w=1019&h=926&f=png&s=94919)
+![uni3.png](https://i.loli.net/2019/12/03/zukV31FGAD5j2Cr.png)
 
 #### <u>4、接入步骤</u>
 
@@ -35,12 +35,12 @@ uniapp 安卓端百度人脸识别、活体检测、人脸采集 demo。
 
 4.2 将百度授权文件 License 放到 nativeplugins/longyoung-BDFaceAuth/android/assets/idl-license.face-android。没路径的请自行创建，nativeplugins 文件夹在项目根目录下。
 
-![](https://user-gold-cdn.xitu.io/2019/12/3/16ec98a14d13fac3?w=339&h=378&f=png&s=15822)
+![uni4.png](https://i.loli.net/2019/12/03/G6B8YRjV3ZJa2fi.png)
 
 4.3 manifest.json 文件，选中「App原生插件配置」，选中本地插件，选择使用插件 longyoung-BDFaceAuth。
 
 
-![](https://user-gold-cdn.xitu.io/2019/12/3/16ec98d537f2f641?w=1213&h=625&f=png&s=82439)
+![uni5.png](https://i.loli.net/2019/12/03/vFPHhJSwOuXIQf7.png)
 
 4.4 调用插件，需要传入 licenseID（必传，百度上的License ID），动作控制参数 actionAry（不传只采集脸，没有动作），动作是否随机参数 isLivenessRandom，是否有声音参数 isSound，代码如下：
 
