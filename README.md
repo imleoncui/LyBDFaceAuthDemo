@@ -12,7 +12,7 @@ uniapp 安卓端百度人脸识别、活体检测、人脸采集 demo。
 
 #### <u>3、百度官方资料准备</u>
 
-此处需要准备 2 样东西，一是 licenseID，二是 License 授权文件（文件名 idl-license.face-android）。如果已经准备好百度资料，可直接拉到下面看第四点接入步骤。百度详细步骤请查看[百度官方文档](https://ai.baidu.com/docs#/FaceSDK-Collect-WithLiveness-Android/top)，页面拉到2.2准备工作有详细申请说明。`注意事项请看下面的特别说明`。
+此处需要准备 2 样东西，一是 licenseID，二是 License 授权文件（文件名 idl-license.face-android）。注意使用自己的证书（就是签名文件.jks），申请百度授权文件的时候需要填写 md5，就填写这个证书的 md5。如果已经准备好百度资料，可直接拉到下面看第四点接入步骤。百度详细步骤请查看[百度官方文档](https://ai.baidu.com/docs#/FaceSDK-Collect-WithLiveness-Android/top)，页面拉到2.2准备工作有详细申请说明。`注意事项请看下面的特别说明`。
 
 ![uni1.png](https://i.loli.net/2019/12/03/RDsyHQmzTXnACra.png)
 
@@ -93,6 +93,20 @@ uniapp 安卓端百度人脸识别、活体检测、人脸采集 demo。
 	}
 </script>
 ```
+
+4.5打自定义基座
+
+需要打自定义基座才可以进行测试，运行->运行到手机或模拟器->制作自定义基座。注意事项看图片，请使用自己的证书（就是签名文件.jks），申请百度授权文件的时候填写这个证书的 md5。`每次打自定义基座的时候，最好先把旧的基座删除（如果存在），路径在根目录下的unpackage文件夹里面(LyBDFaceAuthDemo\unpackage\debug\android_debug.apk)。`
+
+![uni6.png](https://i.loli.net/2019/12/10/3r25AHUlXpx4tYE.png)
+
+![uni7.png](https://i.loli.net/2019/12/10/VqbN6J82WpeEFPY.png)
+
+4.6勾选自定义基座后运行
+
+运行->运行到手机或模拟器->运行基座选择，勾选自定义调试基座，之后运行到设备，如下图。
+
+![uni8.png](https://i.loli.net/2019/12/10/SGBO2TIFHl3NQ1j.png)
 
 #### <u>5、注意事项</u>
 

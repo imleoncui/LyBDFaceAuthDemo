@@ -46,7 +46,6 @@
 <script>
 	import permijs from '../../utiles/permission.js'
 
-	// const lyBDFaceAuth = uni.requireNativePlugin('longyoung-BDFaceAuth');
 	// #ifdef APP-PLUS
 	const lyBDFaceAuth = uni.requireNativePlugin('longyoung-BDFaceAuth'); //android
 	const lyBDFaceAuthIOS = uni.requireNativePlugin('longyoung-BDFaceAuth-iOS'); //ios
@@ -106,6 +105,74 @@
 			// #endif
 		},
 		methods: {
+			//刷脸
+			onScanFace() {
+				console.error("tagg.onScanFace");
+			
+				self = this;
+			
+				var ary = [];
+				for (var i = 0; i < this.items.length; i++) {
+					var item = this.items[i];
+					if (item.checked) {
+						ary[i] = item.value;
+					}
+				}
+			
+				if (uni.getSystemInfoSync().platform == "android") {//安卓
+					lyBDFaceAuth.scanFace({
+						licenseID: this.licenseIDStr,
+						actionAry: ary, //不传无动作
+						isLivenessRandom: this.isLivenessRandom, //不传默认有序，0有序，1随机
+						isSound: this.isSound, //不传默认有声音，0无声，1有声
+					}, result => {
+						console.log('file://' + result.imgPath);
+			
+						self.resultStr = "返回结果：\n" + JSON.stringify(result);
+			
+						//图片上传服务器
+						uni.uploadFile({
+							url: 'http://api.longyoung.com/api/open/common/uploadImgTemp', //图片上传地址
+							filePath: 'file://' + result.imgPath, //图片本地路径，上传服务器需要加这个头'file://'
+							method: 'post',
+							name: 'imgFile', //上传图片参数名
+							success: (res) => {
+								var data = res.data;
+							}
+						});
+			
+						//***有些同学，后台强烈要求传base64，下面是图片转base64的方法，没此需求的可以无视。
+						var bitmapT = new plus.nativeObj.Bitmap("test"); //test标识随便取
+						// 从本地加载Bitmap图片
+						bitmapT.load(result.imgPath, function() {
+							console.log('加载图片成功');
+							var base4 = bitmapT.toBase64Data();
+							console.log('lygg.base64=' + base4);
+							self.resultStr = self.resultStr + "\n======base64字符串（太长，截取前100字符）：\n" + base4.substring(0, 100);
+							self.imgBase64Str = base4.replace(/[\r\n]/g, ""); //显示图片
+						}, function(e) {
+							console.log('加载图片失败：' + JSON.stringify(e));
+						});
+						//***有些同学，后台强烈要求传base64，下面是图片转base64的方法，没此需求的可以无视。
+			
+					});
+				} else if (uni.getSystemInfoSync().platform == "ios") {//苹果
+					lyBDFaceAuthIOS.scanFace({
+						licenseID: this.licenseIDStr,
+						actionAry: ary, //不传无动作
+						isLivenessRandom: this.isLivenessRandom, //不传默认有序，0有序，1随机
+						isSound: this.isSound, //不传默认有声音，0无声，1有声
+					}, result => {
+						console.log('result=' + result);
+						self.resultStr = "返回结果（太长，截取前100字符）：\n" + JSON.stringify(result).substring(0, 100);
+						self.resultStr = self.resultStr + "\n======base64字符串（太长，截取前100字符）：\n" + result.bestImgBase64.substring(0, 100);
+						self.imgBase64Str = "data:image/png;base64," + result.bestImgBase64.replace(/[\r\n]/g, ""); //显示图片
+					});
+				}
+			
+			},
+			
+			
 			//动作绑定
 			checkboxChange: function(e) {
 				var items = this.items,
@@ -139,72 +206,6 @@
 			},
 
 
-			//刷脸
-			onScanFace() {
-				console.error("tagg.onScanFace");
-
-				self = this;
-
-				var ary = [];
-				for (var i = 0; i < this.items.length; i++) {
-					var item = this.items[i];
-					if (item.checked) {
-						ary[i] = item.value;
-					}
-				}
-
-				if (uni.getSystemInfoSync().platform == "android") {//安卓
-					lyBDFaceAuth.scanFace({
-						licenseID: this.licenseIDStr,
-						actionAry: ary, //不传无动作
-						isLivenessRandom: this.isLivenessRandom, //不传默认有序，0有序，1随机
-						isSound: this.isSound, //不传默认有声音，0无声，1有声
-					}, result => {
-						console.log('file://' + result.imgPath);
-
-						self.resultStr = "返回结果：\n" + JSON.stringify(result);
-
-						//图片上传服务器
-						uni.uploadFile({
-							url: 'http://api.longyoung.com/api/open/common/uploadImgTemp', //图片上传地址
-							filePath: 'file://' + result.imgPath, //图片本地路径，上传服务器需要加这个头'file://'
-							method: 'post',
-							name: 'imgFile', //上传图片参数名
-							success: (res) => {
-								var data = res.data;
-							}
-						});
-
-						//***有些同学，后台强烈要求传base64，下面是图片转base64的方法，没此需求的可以无视。
-						var bitmapT = new plus.nativeObj.Bitmap("test"); //test标识随便取
-						// 从本地加载Bitmap图片
-						bitmapT.load(result.imgPath, function() {
-							console.log('加载图片成功');
-							var base4 = bitmapT.toBase64Data();
-							console.log('lygg.base64=' + base4);
-							self.resultStr = self.resultStr + "\n=====base64字符串（太长，截取前100字符）：\n" + base4.substring(0, 100);
-							self.imgBase64Str = base4.replace(/[\r\n]/g, ""); //显示图片
-						}, function(e) {
-							console.log('加载图片失败：' + JSON.stringify(e));
-						});
-						//***有些同学，后台强烈要求传base64，下面是图片转base64的方法，没此需求的可以无视。
-
-					});
-				} else if (uni.getSystemInfoSync().platform == "ios") {//苹果
-					lyBDFaceAuthIOS.scanFace({
-						licenseID: this.licenseIDStr,
-						actionAry: ary, //不传无动作
-						isLivenessRandom: this.isLivenessRandom, //不传默认有序，0有序，1随机
-						isSound: this.isSound, //不传默认有声音，0无声，1有声
-					}, result => {
-						console.log('file://' + result.imgPath);//bestImgBase64
-						self.resultStr = "返回结果：\n" + JSON.stringify(result);
-						self.resultStr = self.resultStr + "\n=====base64字符串（太长，截取前100字符）：\n" + result.bestImgBase64.substring(0, 100);
-						self.imgBase64Str = result.bestImgBase64.replace(/[\r\n]/g, ""); //显示图片
-					});
-				}
-
-			},
 			//权限
 			async requestAndroidPermission(permisionID) {
 				var result = await permijs.requestAndroidPermission(permisionID);
