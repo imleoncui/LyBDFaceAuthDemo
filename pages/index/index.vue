@@ -110,10 +110,12 @@
 			// #ifdef APP-PLUS
 			if (uni.getSystemInfoSync().platform == "ios") {
 				// this.judgeIosPermission('camera');//相机
+				this.licenseIDStr = "longyoung-face-ios";
 			} else if (uni.getSystemInfoSync().platform == "android") {
 				this.requestAndroidAPermission('android.permission.CAMERA'); //相机
 				// this.requestAndroidPermission('android.permission.READ_EXTERNAL_STORAGE');//外部存储(含相册)读取权限
 				// this.requestAndroidPermission('android.permission.WRITE_EXTERNAL_STORAGE');//外部存储(含相册)写入权限
+				this.licenseIDStr = "longyoung-face-android";
 			}
 			// #endif
 		},
