@@ -1,7 +1,7 @@
 {  
-    "name": "免费安卓端百度人脸识别、活体检测、人脸采集android",  
+    "name": "【支持横竖屏】安卓人脸识别、百度活体检测、人脸采集android端",  
     "id": "longyoung-BDFaceAuth",  
-    "version": "1.0.0",  
+    "version": "1.0.4",  
     "description": "longyoung出品，如有疑问，关注公众号「longyoung」后台发消息提问。",  
     "_dp_type":"nativeplugin",  
     "_dp_nativeplugin":{  

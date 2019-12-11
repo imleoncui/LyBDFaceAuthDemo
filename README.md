@@ -46,7 +46,10 @@ uniapp 安卓端百度人脸识别、活体检测、人脸采集 demo。
 
 ```
 <script>
-	const lyBDFaceAuth = uni.requireNativePlugin('longyoung-BDFaceAuth');
+	// #ifdef APP-PLUS
+	const lyBDFaceAuth = uni.requireNativePlugin('longyoung-BDFaceAuth'); //android
+	const lyBDFaceAuthIOS = uni.requireNativePlugin('longyoung-BDFaceAuth-iOS'); //ios
+	// #endif
 	export default {
 		data() {
 			return {
@@ -56,38 +59,77 @@ uniapp 安卓端百度人脸识别、活体检测、人脸采集 demo。
 		methods: {
 			onScanFace() {
 				console.error("tagg.onScanFace");
-				lyBDFaceAuth.scanFace({
-					licenseID:"longyoung-face-android",
-					actionAry:["Eye", "Mouth", "HeadLeft", "HeadRight", "HeadLeftOrRight", "HeadUp", "HeadDown"],//不传无动作
-					isLivenessRandom:0,//不传默认有序，0有序，1随机
-					isSound:0,//不传默认有声音，0无声，1有声
-				}, result => {
-					console.log('file://' + result.imgPath);
-					
-					//图片上传服务器
-					uni.uploadFile({
-						url:'http://api.longyoung.com/api/open/common/uploadImgTemp',//图片上传地址
-						filePath: 'file://' + result.imgPath,//图片本地路径，上传服务器需要加这个头'file://'
-						method: 'post',
-						name: 'imgFile',//上传图片参数名
-						success: (res) => {
-							var data = res.data;
-						}
+				
+				if (uni.getSystemInfoSync().platform == "android") {//安卓
+					lyBDFaceAuth.scanFace({
+						licenseID:"longyoung-face-android",//必须与百度授权资料一致
+						actionAry:["Eye", "Mouth", "HeadLeft", "HeadRight", "HeadLeftOrRight", "HeadUp", "HeadDown"],//不传无动作
+						isLivenessRandom:0,//不传默认有序，0有序，1随机
+						isSound:0,//不传默认有声音，0无声，1有声，iOS无效
+						txtColor:this.txtColor,//文字颜色
+						bgColor:this.bgColor,//背景颜色
+						roundColor:this.roundColor//圆的颜色
+					}, result => {
+						console.log('file://' + result.imgPath);
+						
+						//图片上传服务器
+						uni.uploadFile({
+							url:'http://api.longyoung.com/api/open/common/uploadImgTemp',//图片上传地址
+							filePath: 'file://' + result.imgPath,//图片本地路径，上传服务器需要加这个头'file://'
+							method: 'post',
+							name: 'imgFile',//上传图片参数名
+							success: (res) => {
+								var data = res.data;
+							}
+						});
+						
+						//***有些同学反馈，后台强烈要求传base64，下面是图片转base64的方法，没此需求的可以无视。
+						var bitmapT = new plus.nativeObj.Bitmap("test"); //test标识谁便取
+						// 从本地加载Bitmap图片
+						bitmapT.load(result.imgPath, function() {
+							console.log('加载图片成功');
+							var base4 = bitmapT.toBase64Data();
+							console.log('lygg.base64=' + base4);
+						}, function(e) {
+							console.log('加载图片失败：' + JSON.stringify(e));
+						});
+						//***有些同学反馈，后台强烈要求传base64，下面是图片转base64的方法，没此需求的可以无视。
+						
 					});
-					
-					//***有些同学反馈，后台强烈要求传base64，下面是图片转base64的方法，没此需求的可以无视。
-					var bitmapT = new plus.nativeObj.Bitmap("test"); //test标识谁便取
-					// 从本地加载Bitmap图片
-					bitmapT.load(result.imgPath, function() {
-						console.log('加载图片成功');
-						var base4 = bitmapT.toBase64Data();
-						console.log('lygg.base64=' + base4);
-					}, function(e) {
-						console.log('加载图片失败：' + JSON.stringify(e));
+				}
+				else if (uni.getSystemInfoSync().platform == "ios") {//苹果
+					lyBDFaceAuthIOS.scanFace({
+						licenseID: "longyoung-face-ios",//必须与百度授权资料一致
+						actionAry:["Eye", "Mouth", "HeadLeft", "HeadRight", "HeadLeftOrRight", "HeadUp", "HeadDown"],//不传无动作
+						isLivenessRandom:0,//不传默认有序，0有序，1随机
+						isSound:0,//不传默认有声音，0无声，1有声，iOS无效
+					}, result => {
+						console.log('result=' + result);//图片存在 result.bestImgBase64，显示图片需要加头"data:image/png;base64," + result.bestImgBase64.replace(/[\r\n]/g, "")
+						
+						//***不传base64的，看这里，使用 uni.uploadFile()上传服务器，没此需求的可以无视。
+						var bitmapT = new plus.nativeObj.Bitmap('test');
+						//加载base64图片
+						bitmapT.loadBase64Data(result.bestImgBase64, function(res){
+							//保存base64图片
+							bitmapT.save("_faceImg/face.png", {}, function(res){
+								bitmapT.clear();//销毁bitmap对象
+								
+								//上传图片
+								//TODO 使用 uni.uploadFile()上传服务器，filePath=res.target
+								
+							}, function(res){
+								console.log("longyoung.save.fail=", res);
+							});
+							
+						}, function(res){
+							console.log("longyoung.fail=", res);
+						});
+						//***不传base64的，看这里，使用 uni.uploadFile()上传服务器，没此需求的可以无视。
+
 					});
-					//***有些同学反馈，后台强烈要求传base64，下面是图片转base64的方法，没此需求的可以无视。
-					
-				});
+				}
+				
+				
 			},
 		}
 	}

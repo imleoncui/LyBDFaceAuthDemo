@@ -31,6 +31,15 @@
 			<label class="ml-30">
 				<radio style="transform: scale(0.7);" value="r22" />无声音</label>
 		</radio-group>
+		
+		<view class="c-hint margin-l-r" style="margin-top: 30rpx;">文字颜色</view>
+		<input v-model="txtColor" class="margin-l-r" placeholder="请输入" />
+		
+		<view class="c-hint margin-l-r" style="margin-top: 30rpx;">背景颜色</view>
+		<input v-model="bgColor" class="margin-l-r" placeholder="请输入" />
+		
+		<view class="c-hint margin-l-r" style="margin-top: 30rpx;">圆的颜色</view>
+		<input v-model="roundColor" class="margin-l-r" placeholder="请输入" />
 
 		<view class="button-sp-area">
 			<button type="primary" plain="true" @click="onScanFace()">开始活体采集</button>
@@ -88,6 +97,10 @@
 				],
 				isLivenessRandom: 0,
 				isSound: 1,
+				txtColor:'#3987FD',
+				bgColor:'#2F2F33',
+				roundColor:'#3987FD',
+				
 				resultStr: "",
 				imgBase64Str: ""
 			}
@@ -125,6 +138,9 @@
 						actionAry: ary, //不传无动作
 						isLivenessRandom: this.isLivenessRandom, //不传默认有序，0有序，1随机
 						isSound: this.isSound, //不传默认有声音，0无声，1有声
+						txtColor:this.txtColor,//文字颜色
+						bgColor:this.bgColor,//背景颜色
+						roundColor:this.roundColor//圆的颜色
 					}, result => {
 						console.log('file://' + result.imgPath);
 			
